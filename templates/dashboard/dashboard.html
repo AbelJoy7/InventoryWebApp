@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #4f46e5;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .navbar h2 {
+            color: #fff;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            font-weight: 500;
+        }
+
+        /* Filter */
+        .filter-box {
+            margin-bottom: 25px;
+        }
+
+        select, button {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Cards */
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 15px;
+            color: #777;
+        }
+
+        .card p {
+            font-size: 26px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #4f46e5;
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        tbody tr:hover {
+            background: #f1f5ff;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>📦 Inventory System</h2>
+    <div>
+        <a href="{% url 'dashboard-home' %}">Home</a>
+        <a href="{% url 'purchase-purchase_entry' %}">Purchase Entry</a>
+        <a href="{% url 'sales-sales_entry' %}">Sales Entry</a>
+        <a href="{% url 'dashboard-products' %}">Products</a>
+    </div>
+</div>
+
+<!-- Time Filter -->
+<div class="filter-box">
+    <form method="get">
+        <select name="time_filter">
+            <option value="">-- Select Period --</option>
+            <option value="last_day">Last Day</option>
+            <option value="last_week">Last Week</option>
+            <option value="last_month">Last Month</option>
+            <option value="last_year">Last Year</option>
+        </select>
+        <button type="submit">Apply</button>
+    </form>
+</div>
+
+<!-- Purchase Summary -->
+<div class="section">
+    <h2>📊 Purchase Summary</h2>
+    <div class="cards">
+        <div class="card">
+            <h3>Total Quantity</h3>
+            <p>{{ purchases_filtered.total_quantity|default:0 }}</p>
+        </div>
+        <div class="card">
+            <h3>Average Price</h3>
+            <p>₹ {{ purchases_filtered.average_price|default:0 }}</p>
+        </div>
+        <div class="card">
+            <h3>Total Amount</h3>
+            <p>₹ {{ purchases_filtered.total_amount|default:0 }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Sales Summary -->
+<div class="section">
+    <h2>📊 Sales Summary</h2>
+    <div class="cards">
+        <div class="card">
+            <h3>Total Quantity</h3>
+            <p>{{ sales_filtered.total_quantity|default:0 }}</p>
+        </div>
+        <div class="card">
+            <h3>Average Price</h3>
+            <p>₹ {{ sales_filtered.average_price|default:0 }}</p>
+        </div>
+        <div class="card">
+            <h3>Total Amount</h3>
+            <p>₹ {{ sales_filtered.total_amount|default:0 }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Monthly Report -->
+<div class="table-container">
+    <h2>📅 Monthly Report</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Month</th>
+            <th>Purchase Qty</th>
+            <th>Sales Qty</th>
+            <th>Avg Purchase Price</th>
+            <th>Avg Sales Price</th>
+            <th>Purchase Total</th>
+            <th>Sales Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in monthly_report %}
+        <tr>
+            <td>{{ row.month|date:"M Y" }}</td>
+            <td>{{ row.total_purchase_quantity }}</td>
+            <td>{{ row.total_sales_quantity }}</td>
+            <td>₹ {{ row.avg_purchase_price }}</td>
+            <td>₹ {{ row.avg_sales_price }}</td>
+            <td>₹ {{ row.total_purchase_amount }}</td>
+            <td>₹ {{ row.total_sales_amount }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">No data available</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Entry</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            background: #f4f6f9;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .form-container {
+            max-width: 520px;
+            background: #ffffff;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4338ca;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+    <h2>📦 Inventory System</h2>
+    <ul>
+        <li><a href="{% url 'dashboard-home' %}">Home</a></li>
+        <li><a href="{% url 'dashboard-dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'sales-sales_entry' %}">Sales Entry</a></li>
+       
+    </ul>
+</div>
+
+<div class="form-container">
+    <h2>Inventory Entry Form</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label>Date</label>
+        <input type="date" name="date" required>
+
+        <label>Item</label>
+        <input type="text" name="item" placeholder="Item name" required>
+
+        <label>Quantity</label>
+        <input type="number" name="quantity" placeholder="Quantity" required>
+
+        <label>Price</label>
+        <input type="number" step="0.01" name="price" placeholder="Price" required>
+
+        <label>Seller Name</label>
+        <input type="text" name="seller_name" placeholder="Seller name" required>
+
+        <label>Seller Place</label>
+        <input type="text" name="seller_place" placeholder="Seller place">
+
+        <label>Seller Phone Number</label>
+        <input type="number" name="seller_phno" placeholder="Seller phone number">
+
+        <button type="submit">Save Entry</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Inventory Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .card h3 {
+            margin: 0;
+            color: #555;
+        }
+        .card .value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #2c3e50;
+        }
+    </style>
+
+
+    {% comment %} <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: #f4f6f9;
+        padding: 20px;
+      }
+
+      .dashboard-container {
+        max-width: 1200px;
+        margin: auto;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      /* Cards */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      }
+
+      .card h3 {
+        font-size: 16px;
+        color: #777;
+      }
+
+      .card p {
+        font-size: 28px;
+        font-weight: 600;
+        margin-top: 10px;
+        color: #222;
+      }
+
+      /* Table */
+      .table-container {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        background: #4f46e5;
+        color: white;
+      }
+
+      th,
+      td {
+        padding: 12px 15px;
+        text-align: left;
+      }
+
+      tbody tr {
+        border-bottom: 1px solid #ddd;
+      }
+
+      tbody tr:hover {
+        background: #f1f5ff;
+      }
+
+      .status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .in-stock {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .low-stock {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .out-stock {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          text-align: center;
+        }
+      }
+    </style> {% endcomment %}
+    <style>
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #4f46e5;
+        padding: 10px 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+      }
+
+      .navbar h2 {
+        color: white;
+      }
+
+      .navbar ul {
+        list-style: none;
+        display: flex;
+        gap: 15px;
+      }
+
+      .navbar ul li a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .navbar ul li a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h2>📦 Inventory System</h2>
+      <ul>
+        <li><a href="{% url 'dashboard-home' %}">Home</a></li>
+        <li>
+          <a href="{% url 'purchase-purchase_entry' %}">Purchase Entry</a>
+        </li>
+        <li><a href="{% url 'sales-sales_entry' %}">Sales Entry</a></li>
+      </ul>
+    </div>
+
+    <div class="dashboard-container">
+      <h1>📦 Inventory Dashboard</h1>
+
+      <div class="mb-3">
+        <form method="get">
+            {% csrf_token %}
+    <select name="time_filter">
+        <option value="">-- Select Period --</option>
+        <option value="last_day">Last Day</option>
+        <option value="last_week">Last Week</option>
+        <option value="last_month">Last Month</option>
+        <option value="last_year">Last Year</option>
+    </select>
+    <button type="submit">Apply</button>
+</form>
+
+      </div>
+
+      <!-- Summary Cards -->
+
+      <div class="cards">
+        <div class="card">
+            
+        
+          <h2>📊 Purchase Dashboard</h2>
+
+    <div class="dashboard">
+        <div class="card">
+            <h3>Total Quantity</h3>
+            <div class="value">{{ purchases_filtered.total_quantity }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Average Price</h3>
+            <div class="value">₹ {{ purchases_filtered.average_price }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Total Amount</h3>
+            <div class="value">₹ {{ purchases_filtered.total_amount }}</div>
+        </div>
+    </div>
+    
+
+
+    <h2>📊 Sales Dashboard</h2>
+
+    <div class="dashboard">
+        <div class="card">
+            <h3>Total Quantity</h3>
+            <div class="value">{{ sales_filtered.total_quantity }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Average Price</h3>
+            <div class="value">₹ {{ sales_filtered.average_price }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Total Amount</h3>
+            <div class="value">₹ {{ sales_filtered.total_amount }}</div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+      <!-- Inventory Table -->
+      <div class="table-container">
+        <h2 style="margin-bottom: 15px">Sales Details</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Purchase Quantity</th>
+              <th>Sales Quantity</th>
+              <th>Purchase Price</th>
+              <th>Sales Price</th>
+              <th>Purchase Total</th>
+              <th>Sales Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for sale in monthly_report %}
+            <tr>
+              <td>{{ sale.month }}</td>
+              <td>{{sale.total_purchase_quantity}}</td>
+              <td>{{sale.total_sales_quantity}}</td>
+              <td>₹{{sale.avg_purchase_price}}</td>
+              <td>₹{{sale.avg_sales_price}}</td>
+              <td>₹{{sale.total_purchase_amount}}</td>
+              <td>₹{{sale.total_sales_amount}}</td>
+              <td><span class="status in-stock">In Stock</span></td>
+            </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="table-container">
+        <h2 style="margin-bottom: 15px">Purchase Details</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Item Name</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Seller Name</th>
+              <th>Seller Place</th>
+              <th>Seller Phone Number</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for purchase in purchases %}
+            <tr>
+              <td>{{ purchase.date }}</td>
+              <td>{{purchase.item}}</td>
+              <td>{{purchase.quantity}}</td>
+              <td>₹{{purchase.price}}</td>
+              <td>{{purchase.seller_name}}</td>
+              <td>{{purchase.seller_place}}</td>
+              <td>{{purchase.seller_phno}}</td>
+              <td>{{purchase.purchase_total}}</td>
+              <td><span class="status in-stock">In Stock</span></td>
+            </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

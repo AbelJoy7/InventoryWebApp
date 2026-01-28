@@ -1,0 +1,26 @@
+<div id="chatbox">
+  <div id="messages"></div>
+  <input id="userInput" placeholder="Ask about sales, stock, profit..." />
+  <button onclick="sendMsg()">Send</button>
+</div>
+
+<script>
+function sendMsg(){
+  let msg = document.getElementById("userInput").value;
+
+  fetch("/chatbot/",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "X-CSRFToken": "{{ csrf_token }}"
+    },
+    body: JSON.stringify({message: msg})
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    document.getElementById("messages").innerHTML +=
+      `<p><b>You:</b> ${msg}</p><p><b>Bot:</b> ${data.reply}</p>`;
+  })
+}
+</script>
+

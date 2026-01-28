@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Inventory System{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body> 
+    <!-- Navbar -->
+<div class="navbar">
+    <h2>📦 Inventory System</h2>
+    <ul>
+        <li><a href="{% url 'dashboard-dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'purchase-purchase_entry' %}">Purchase Entry</a></li>
+        <li><a href="{% url 'sales-sales_entry' %}">Sales Entry</a></li>
+        <li><a href="{% url 'dashboard-products' %}">Products</a></li>
+        <li><a href="{% url 'chatbot' %}">Chatbot</a></li>
+        <li><a href="{% url 'chat' %}">Chat</a></li>
+        <li><a href="#">Sales</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+</div>
+</body>
+</html> 
